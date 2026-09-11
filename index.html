@@ -7,13 +7,13 @@
 <meta name="description" content="A free study hub for IIT Madras BS Foundation level: all 8 subjects with week-by-week outlines, an AI tutor to ask questions, and a CGPA calculator.">
 <meta name="keywords" content="IITM Foundation, IIT Madras BS, Foundation level subjects, CGPA calculator, AI tutor, Mathematics for Data Science, Statistics for Data Science, Python programming">
 <meta name="robots" content="index, follow">
-<link rel="canonical" href="https://YOURUSERNAME.github.io/iitm-foundation-hub/">
+<link rel="canonical" href="https://hydraallen050306-ux.github.io/iitm-foundation-hub/">
 
 <!-- Open Graph (how it looks when shared on WhatsApp, social, etc.) -->
 <meta property="og:type" content="website">
 <meta property="og:title" content="IITM Foundation Hub">
 <meta property="og:description" content="All 8 IITM Foundation subjects, an AI tutor, and a CGPA calculator — in one page.">
-<meta property="og:url" content="https://YOURUSERNAME.github.io/iitm-foundation-hub/">
+<meta property="og:url" content="https://hydraallen050306-ux.github.io/iitm-foundation-hub/">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -145,6 +145,13 @@
   }
   .week-row .wk-body h4{font-size:15.5px;font-weight:600;margin:0 0 3px;}
   .week-row .wk-body p{font-size:13.5px;color:var(--ink-soft);margin:0;}
+  .wk-resources{margin-top:10px;display:flex;flex-direction:column;gap:8px;}
+  .wk-resources video{width:100%;max-width:420px;border:1px solid var(--line);background:#000;}
+  .wk-pdf-link{
+    display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--maroon);
+    text-decoration:none;border:1px solid var(--line-strong);padding:6px 12px;width:fit-content;
+  }
+  .wk-pdf-link:hover{background:var(--paper-alt);}
   .ask-tutor-btn{
     margin-top:24px;border:1px solid var(--maroon);background:var(--maroon);color:var(--white);
     padding:10px 18px;font-size:14px;cursor:pointer;font-family:inherit;
@@ -316,8 +323,22 @@
 /* ---------- Data ---------- */
 const GRADE_POINTS = {S:10, A:9, B:8, C:7, D:6, E:4, U:0};
 
-function weekTemplate(n, focus){
-  return {title: `Week ${n}: ${focus}`, blurb: "Add your notes, deadlines and resources for this week here."};
+/*
+  HOW TO ADD A LECTURE VIDEO OR PDF TO A WEEK
+  --------------------------------------------
+  1. In your GitHub repo, create two folders (if they don't exist): "videos" and "pdfs"
+  2. Upload your video file into "videos" (e.g. videos/eng1-week1.mp4)
+  3. Upload your PDF file into "pdfs" (e.g. pdfs/eng1-week1.pdf)
+  4. Below, find the subject and week you want, and fill in the file names like this:
+       video: "videos/eng1-week1.mp4"
+       pdf: "pdfs/eng1-week1.pdf"
+     Leave them as null if you don't have a file for that week yet.
+  Note: GitHub's web upload only accepts files up to 25MB. For longer lecture
+  videos, compress them first, or host on YouTube (unlisted) and use a
+  "youtube" field instead — ask for that version if you'd like it.
+*/
+function week(title, video = null, pdf = null){
+  return { title, video, pdf };
 }
 
 const subjects = [
@@ -326,9 +347,9 @@ const subjects = [
     tagline: "Reading comprehension, grammar and academic writing basics.",
     weeksDone: 3,
     weeks: [
-      "Reading strategies","Sentence structure","Paragraph writing","Grammar essentials",
-      "Vocabulary building","Formal vs informal tone","Summarising a passage","Note-making",
-      "Descriptive writing","Comparing texts","Revision workshop","Mock assessment"
+      week("Reading strategies"), week("Sentence structure"), week("Paragraph writing"), week("Grammar essentials"),
+      week("Vocabulary building"), week("Formal vs informal tone"), week("Summarising a passage"), week("Note-making"),
+      week("Descriptive writing"), week("Comparing texts"), week("Revision workshop"), week("Mock assessment")
     ]
   },
   {
@@ -336,9 +357,9 @@ const subjects = [
     tagline: "Algebra, functions and sequences that everything else builds on.",
     weeksDone: 5,
     weeks: [
-      "Sets and functions","Sequences and series","System of linear equations","Matrices, intro",
-      "Matrix operations","Determinants","Vectors, intro","Straight lines",
-      "Quadratic equations","Permutations & combinations","Coordinate geometry","Revision & practice"
+      week("Sets and functions"), week("Sequences and series"), week("System of linear equations"), week("Matrices, intro"),
+      week("Matrix operations"), week("Determinants"), week("Vectors, intro"), week("Straight lines"),
+      week("Quadratic equations"), week("Permutations & combinations"), week("Coordinate geometry"), week("Revision & practice")
     ]
   },
   {
@@ -346,9 +367,9 @@ const subjects = [
     tagline: "Descriptive statistics and the basics of probability.",
     weeksDone: 4,
     weeks: [
-      "Types of data","Summarising data","Measures of central tendency","Measures of spread",
-      "Correlation","Basic probability","Conditional probability","Bayes' theorem",
-      "Random variables","Discrete distributions","Continuous distributions","Revision & practice"
+      week("Types of data"), week("Summarising data"), week("Measures of central tendency"), week("Measures of spread"),
+      week("Correlation"), week("Basic probability"), week("Conditional probability"), week("Bayes' theorem"),
+      week("Random variables"), week("Discrete distributions"), week("Continuous distributions"), week("Revision & practice")
     ]
   },
   {
@@ -356,9 +377,9 @@ const subjects = [
     tagline: "Breaking problems down the way a program would solve them.",
     weeksDone: 6,
     weeks: [
-      "What is computational thinking","Flowcharts","Pseudocode basics","Variables & data types",
-      "Conditionals","Loops","Functions","Recursion, intro",
-      "Arrays and lists","Searching","Sorting","Revision & practice"
+      week("What is computational thinking"), week("Flowcharts"), week("Pseudocode basics"), week("Variables & data types"),
+      week("Conditionals"), week("Loops"), week("Functions"), week("Recursion, intro"),
+      week("Arrays and lists"), week("Searching"), week("Sorting"), week("Revision & practice")
     ]
   },
   {
@@ -366,9 +387,9 @@ const subjects = [
     tagline: "Building on English I with structured argument and presentation.",
     weeksDone: 2,
     weeks: [
-      "Argumentative writing","Building a thesis","Using evidence","Structuring an essay",
-      "Presentation skills","Email & report writing","Editing your own work","Peer review",
-      "Persuasive techniques","Public speaking basics","Revision workshop","Mock assessment"
+      week("Argumentative writing"), week("Building a thesis"), week("Using evidence"), week("Structuring an essay"),
+      week("Presentation skills"), week("Email & report writing"), week("Editing your own work"), week("Peer review"),
+      week("Persuasive techniques"), week("Public speaking basics"), week("Revision workshop"), week("Mock assessment")
     ]
   },
   {
@@ -376,9 +397,9 @@ const subjects = [
     tagline: "Calculus and multivariable methods used across data science.",
     weeksDone: 1,
     weeks: [
-      "Limits and continuity","Differentiation basics","Applications of derivatives","Maxima & minima",
-      "Integration basics","Definite integrals","Multivariable functions","Partial derivatives",
-      "Optimisation","Differential equations, intro","Applications in data science","Revision & practice"
+      week("Limits and continuity"), week("Differentiation basics"), week("Applications of derivatives"), week("Maxima & minima"),
+      week("Integration basics"), week("Definite integrals"), week("Multivariable functions"), week("Partial derivatives"),
+      week("Optimisation"), week("Differential equations, intro"), week("Applications in data science"), week("Revision & practice")
     ]
   },
   {
@@ -386,9 +407,9 @@ const subjects = [
     tagline: "Estimation, hypothesis testing and regression.",
     weeksDone: 0,
     weeks: [
-      "Sampling distributions","Point estimation","Confidence intervals","Hypothesis testing, intro",
-      "One-sample tests","Two-sample tests","Chi-square tests","Simple linear regression",
-      "Multiple regression","Model evaluation","ANOVA, intro","Revision & practice"
+      week("Sampling distributions"), week("Point estimation"), week("Confidence intervals"), week("Hypothesis testing, intro"),
+      week("One-sample tests"), week("Two-sample tests"), week("Chi-square tests"), week("Simple linear regression"),
+      week("Multiple regression"), week("Model evaluation"), week("ANOVA, intro"), week("Revision & practice")
     ]
   },
   {
@@ -396,9 +417,9 @@ const subjects = [
     tagline: "Writing, testing and structuring real Python programs.",
     weeksDone: 4,
     weeks: [
-      "Python basics & syntax","Control flow","Functions in Python","Strings & lists",
-      "Dictionaries & sets","File handling","Errors & exceptions","Writing clean functions",
-      "Modules & libraries","Working with data (pandas intro)","Simple plotting","Mini project"
+      week("Python basics & syntax"), week("Control flow"), week("Functions in Python"), week("Strings & lists"),
+      week("Dictionaries & sets"), week("File handling"), week("Errors & exceptions"), week("Writing clean functions"),
+      week("Modules & libraries"), week("Working with data (pandas intro)"), week("Simple plotting"), week("Mini project")
     ]
   }
 ];
@@ -453,8 +474,14 @@ function openDetail(code){
     <div class="week-row">
       <div class="wk">${String(i+1).padStart(2,'0')}</div>
       <div class="wk-body">
-        <h4>${w}</h4>
+        <h4>${w.title}</h4>
         <p>${i < s.weeksDone ? 'Marked complete.' : 'Not started yet — add your notes as you go.'}</p>
+        ${(w.video || w.pdf) ? `
+          <div class="wk-resources">
+            ${w.video ? `<video controls src="${w.video}"></video>` : ''}
+            ${w.pdf ? `<a class="wk-pdf-link" href="${w.pdf}" target="_blank" rel="noopener">📄 Open lecture notes (PDF)</a>` : ''}
+          </div>
+        ` : ''}
       </div>
     </div>
   `).join('');
@@ -494,13 +521,13 @@ function tutorReply(question, subjectCode){
   if(!s) return "Pick a subject first, then ask your question.";
   if(q.includes("this week") || q.includes("current week")){
     const idx = Math.min(s.weeksDone, s.weeks.length - 1);
-    return `You're on Week ${idx+1}: ${s.weeks[idx]}. Focus on the core definitions first, then work through a couple of practice problems.`;
+    return `You're on Week ${idx+1}: ${s.weeks[idx].title}. Focus on the core definitions first, then work through a couple of practice problems.`;
   }
   if(q.includes("practice") || q.includes("question")){
     return `Here's a starting point for ${s.name}: try explaining the last topic you covered out loud in your own words, then attempt one problem without notes.`;
   }
   if(q.includes("syllabus") || q.includes("topics") || q.includes("weeks")){
-    return `${s.name} covers: ${s.weeks.slice(0,4).join(", ")}, and more across 12 weeks. Open the subject card above to see the full outline.`;
+    return `${s.name} covers: ${s.weeks.slice(0,4).map(w => w.title).join(", ")}, and more across 12 weeks. Open the subject card above to see the full outline.`;
   }
   return `Good question about ${s.name}. This demo tutor gives sample guidance — connect it to a live model to get real, subject-specific answers.`;
 }
