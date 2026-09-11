@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IITM Foundation Hub — Subjects, AI Tutor & CGPA Calculator</title>
+<meta name="description" content="A free study hub for IIT Madras BS Foundation level: all 8 subjects with week-by-week outlines, an AI tutor to ask questions, and a CGPA calculator.">
+<meta name="keywords" content="IITM Foundation, IIT Madras BS, Foundation level subjects, CGPA calculator, AI tutor, Mathematics for Data Science, Statistics for Data Science, Python programming">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://YOURUSERNAME.github.io/iitm-foundation-hub/">
+
+<!-- Open Graph (how it looks when shared on WhatsApp, social, etc.) -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="IITM Foundation Hub">
+<meta property="og:description" content="All 8 IITM Foundation subjects, an AI tutor, and a CGPA calculator — in one page.">
+<meta property="og:url" content="https://YOURUSERNAME.github.io/iitm-foundation-hub/">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,500;8..60,600;8..60,700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#FAF6EC;
+    --paper-alt:#F1EADA;
+    --ink:#241F1A;
+    --ink-soft:#5B5348;
+    --maroon:#7B2230;
+    --maroon-deep:#5C1922;
+    --ochre:#C08A2E;
+    --sage:#4F6F52;
+    --line:#DCD1B8;
+    --line-strong:#C9BB9C;
+    --white:#FFFDF8;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'IBM Plex Sans', sans-serif;
+    line-height:1.55;
+  }
+  h1,h2,h3,.serif{
+    font-family:'Source Serif 4', serif;
+    font-weight:600;
+    color:var(--ink);
+    margin:0;
+  }
+  a{color:inherit;}
+  .wrap{max-width:960px;margin:0 auto;padding:0 24px;}
+  :focus-visible{outline:2px solid var(--maroon);outline-offset:2px;}
+
+  /* Header */
+  header{
+    border-bottom:1px solid var(--line);
+    background:var(--paper);
+    position:sticky;top:0;z-index:20;
+  }
+  .header-inner{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:18px 24px;gap:20px;flex-wrap:wrap;
+  }
+  .wordmark{display:flex;align-items:baseline;gap:8px;}
+  .wordmark .mark{
+    font-family:'Source Serif 4', serif;font-weight:700;font-size:22px;color:var(--maroon);
+  }
+  .wordmark .sub{font-size:13px;color:var(--ink-soft);}
+  nav.top-nav{display:flex;gap:22px;font-size:14px;}
+  nav.top-nav a{text-decoration:none;color:var(--ink-soft);padding-bottom:2px;border-bottom:1px solid transparent;}
+  nav.top-nav a:hover{color:var(--maroon);border-bottom-color:var(--maroon);}
+  .search-box{
+    display:flex;align-items:center;gap:8px;
+    border:1px solid var(--line-strong);background:var(--white);
+    padding:8px 12px;min-width:220px;
+  }
+  .search-box input{
+    border:none;background:transparent;outline:none;font-size:14px;width:100%;
+    font-family:'IBM Plex Sans',sans-serif;color:var(--ink);
+  }
+  .search-box svg{flex-shrink:0;opacity:.6;}
+
+  /* Hero */
+  .hero{padding:64px 0 48px;border-bottom:1px solid var(--line);}
+  .hero h1{font-size:44px;line-height:1.15;max-width:9.5em;}
+  .hero h1 .accent{color:var(--maroon);}
+  .hero p.lede{
+    margin-top:18px;max-width:52ch;color:var(--ink-soft);font-size:17px;
+  }
+  .hero-stats{display:flex;gap:36px;margin-top:36px;flex-wrap:wrap;}
+  .stat .num{font-family:'Source Serif 4',serif;font-size:30px;color:var(--maroon);font-weight:600;}
+  .stat .label{font-size:13px;color:var(--ink-soft);margin-top:2px;}
+
+  /* Section headings */
+  .section{padding:56px 0;border-bottom:1px solid var(--line);}
+  .section-head{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;margin-bottom:28px;flex-wrap:wrap;}
+  .section-head h2{font-size:28px;}
+  .section-head p{color:var(--ink-soft);font-size:14px;max-width:40ch;margin-top:6px;}
+
+  /* Subject grid */
+  .subject-grid{
+    display:grid;grid-template-columns:repeat(2,1fr);gap:1px;
+    background:var(--line);border:1px solid var(--line);
+  }
+  .subject-card{
+    background:var(--paper-alt);padding:24px;cursor:pointer;
+    display:flex;flex-direction:column;gap:12px;transition:background .15s ease;
+  }
+  .subject-card:hover, .subject-card:focus-visible{background:var(--white);}
+  .subject-card.hidden{display:none;}
+  .subject-card .code{font-size:12px;letter-spacing:.02em;color:var(--ochre);font-weight:600;}
+  .subject-card h3{font-size:19px;line-height:1.3;}
+  .subject-card .tagline{font-size:13.5px;color:var(--ink-soft);}
+  .week-ticks{display:flex;gap:3px;margin-top:4px;}
+  .week-ticks span{
+    flex:1;height:5px;background:var(--line-strong);
+  }
+  .week-ticks span.done{background:var(--sage);}
+  .progress-label{font-size:12px;color:var(--ink-soft);}
+  .no-results{padding:32px 4px;color:var(--ink-soft);font-size:14px;display:none;}
+  .no-results.show{display:block;}
+
+  /* Subject detail panel */
+  .detail-panel{
+    display:none;border:1px solid var(--line);background:var(--white);
+    margin-top:28px;padding:32px;
+  }
+  .detail-panel.open{display:block;}
+  .detail-head{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap;}
+  .detail-head h3{font-size:24px;}
+  .detail-head .code{color:var(--ochre);font-size:13px;font-weight:600;}
+  .close-detail{
+    border:1px solid var(--line-strong);background:transparent;color:var(--ink-soft);
+    padding:6px 12px;font-size:13px;cursor:pointer;font-family:inherit;
+  }
+  .close-detail:hover{border-color:var(--maroon);color:var(--maroon);}
+  .week-list{margin-top:24px;border-top:1px solid var(--line);}
+  .week-row{
+    display:flex;gap:16px;padding:14px 0;border-bottom:1px solid var(--line);
+    align-items:flex-start;
+  }
+  .week-row .wk{
+    font-family:'Source Serif 4',serif;font-size:18px;color:var(--maroon);
+    min-width:2.6em;
+  }
+  .week-row .wk-body h4{font-size:15.5px;font-weight:600;margin:0 0 3px;}
+  .week-row .wk-body p{font-size:13.5px;color:var(--ink-soft);margin:0;}
+  .ask-tutor-btn{
+    margin-top:24px;border:1px solid var(--maroon);background:var(--maroon);color:var(--white);
+    padding:10px 18px;font-size:14px;cursor:pointer;font-family:inherit;
+  }
+  .ask-tutor-btn:hover{background:var(--maroon-deep);border-color:var(--maroon-deep);}
+
+  /* AI Tutor */
+  .tutor-wrap{border:1px solid var(--line);background:var(--white);display:grid;grid-template-columns:200px 1fr;}
+  .tutor-side{border-right:1px solid var(--line);padding:20px;background:var(--paper-alt);}
+  .tutor-side label{font-size:12px;color:var(--ink-soft);display:block;margin-bottom:6px;}
+  .tutor-side select{
+    width:100%;padding:8px;border:1px solid var(--line-strong);background:var(--white);
+    font-family:inherit;font-size:13.5px;color:var(--ink);
+  }
+  .tutor-side .hint{font-size:12.5px;color:var(--ink-soft);margin-top:16px;line-height:1.6;}
+  .tutor-main{display:flex;flex-direction:column;height:420px;}
+  .tutor-messages{flex:1;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:14px;}
+  .msg{max-width:80%;padding:10px 14px;font-size:14px;}
+  .msg.bot{background:var(--paper-alt);align-self:flex-start;border:1px solid var(--line);}
+  .msg.user{background:var(--maroon);color:var(--white);align-self:flex-end;}
+  .tutor-input-row{
+    display:flex;border-top:1px solid var(--line);
+  }
+  .tutor-input-row input{
+    flex:1;border:none;padding:14px;font-size:14px;font-family:inherit;outline:none;background:var(--white);
+  }
+  .tutor-input-row button{
+    border:none;background:var(--maroon);color:var(--white);padding:0 22px;cursor:pointer;font-family:inherit;font-size:14px;
+  }
+  .tutor-input-row button:hover{background:var(--maroon-deep);}
+
+  /* CGPA calculator */
+  .cgpa-table{width:100%;border-collapse:collapse;}
+  .cgpa-table th{
+    text-align:left;font-size:12px;color:var(--ink-soft);font-weight:500;
+    padding:8px 8px;border-bottom:1px solid var(--line-strong);
+  }
+  .cgpa-table td{padding:6px 8px;border-bottom:1px solid var(--line);}
+  .cgpa-table input, .cgpa-table select{
+    width:100%;padding:8px;border:1px solid var(--line-strong);font-family:inherit;font-size:13.5px;background:var(--white);color:var(--ink);
+  }
+  .row-remove{
+    border:none;background:transparent;color:var(--ink-soft);cursor:pointer;font-size:16px;padding:4px 8px;
+  }
+  .row-remove:hover{color:var(--maroon);}
+  .cgpa-actions{display:flex;gap:12px;margin-top:16px;flex-wrap:wrap;}
+  .btn-outline{
+    border:1px solid var(--line-strong);background:transparent;padding:9px 16px;font-size:13.5px;cursor:pointer;font-family:inherit;color:var(--ink);
+  }
+  .btn-outline:hover{border-color:var(--maroon);color:var(--maroon);}
+  .cgpa-result{
+    margin-top:24px;border:1px solid var(--line);background:var(--paper-alt);padding:20px 24px;
+    display:flex;gap:40px;flex-wrap:wrap;
+  }
+  .cgpa-result .num{font-family:'Source Serif 4',serif;font-size:32px;color:var(--maroon);}
+  .cgpa-result .label{font-size:12.5px;color:var(--ink-soft);margin-top:2px;}
+
+  footer{padding:32px 0 48px;font-size:13px;color:var(--ink-soft);}
+
+  @media (max-width:720px){
+    .subject-grid{grid-template-columns:1fr;}
+    .hero h1{font-size:32px;}
+    .tutor-wrap{grid-template-columns:1fr;}
+    .tutor-side{border-right:none;border-bottom:1px solid var(--line);}
+    .header-inner{flex-direction:column;align-items:stretch;}
+    nav.top-nav{order:3;justify-content:space-between;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="wordmark">
+      <span class="mark">IITM Foundation Hub</span>
+    </div>
+    <nav class="top-nav">
+      <a href="#subjects">Subjects</a>
+      <a href="#tutor">AI Tutor</a>
+      <a href="#cgpa">CGPA</a>
+    </nav>
+    <div class="search-box">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="7" cy="7" r="5.2" stroke="currentColor" stroke-width="1.3"/><path d="M11 11L14.2 14.2" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+      <input id="searchInput" type="text" placeholder="Search subjects, e.g. Statistics" autocomplete="off">
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <section class="hero">
+    <h1>Everything for your <span class="accent">Foundation</span> level, in one place.</h1>
+    <p class="lede">Eight subjects, twelve weeks each, one hub. Track your week, ask the tutor when you're stuck, and keep an eye on your CGPA as you go.</p>
+    <div class="hero-stats">
+      <div class="stat"><div class="num">8</div><div class="label">Foundation subjects</div></div>
+      <div class="stat"><div class="num">12</div><div class="label">Weeks per term</div></div>
+      <div class="stat"><div class="num">1</div><div class="label">Hub for all of it</div></div>
+    </div>
+  </section>
+
+  <section class="section" id="subjects">
+    <div class="section-head">
+      <div><h2>Your subjects</h2><p>Open a subject to see its week-by-week outline.</p></div>
+    </div>
+    <div class="subject-grid" id="subjectGrid"></div>
+    <div class="no-results" id="noResults">No subject matches that search.</div>
+
+    <div class="detail-panel" id="detailPanel">
+      <div class="detail-head">
+        <div>
+          <div class="code" id="detailCode"></div>
+          <h3 id="detailName"></h3>
+        </div>
+        <button class="close-detail" id="closeDetail">Close</button>
+      </div>
+      <p id="detailTagline" style="color:var(--ink-soft);font-size:14px;margin-top:10px;"></p>
+      <div class="week-list" id="weekList"></div>
+      <button class="ask-tutor-btn" id="askTutorBtn">Ask the AI tutor about this subject</button>
+    </div>
+  </section>
+
+  <section class="section" id="tutor">
+    <div class="section-head">
+      <div><h2>AI Tutor</h2><p>Pick a subject and ask a question. This is a demo tutor with sample answers — wire it up to a live model when you're ready.</p></div>
+    </div>
+    <div class="tutor-wrap">
+      <div class="tutor-side">
+        <label for="tutorSubject">Subject</label>
+        <select id="tutorSubject"></select>
+        <p class="hint">Try asking things like "what is this week about" or "give me a practice question."</p>
+      </div>
+      <div class="tutor-main">
+        <div class="tutor-messages" id="tutorMessages"></div>
+        <div class="tutor-input-row">
+          <input id="tutorInput" type="text" placeholder="Ask a question...">
+          <button id="tutorSend">Send</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="cgpa" style="border-bottom:none;">
+    <div class="section-head">
+      <div><h2>Marks &amp; CGPA</h2><p>Grade points follow the S–U scale: S=10, A=9, B=8, C=7, D=6, E=4, U=0.</p></div>
+    </div>
+    <table class="cgpa-table" id="cgpaTable">
+      <thead>
+        <tr><th style="width:42%;">Course</th><th style="width:20%;">Credits</th><th style="width:20%;">Grade</th><th></th></tr>
+      </thead>
+      <tbody id="cgpaBody"></tbody>
+    </table>
+    <div class="cgpa-actions">
+      <button class="btn-outline" id="addRow">Add course</button>
+      <button class="btn-outline" id="calcCgpa">Calculate CGPA</button>
+    </div>
+    <div class="cgpa-result">
+      <div><div class="num" id="resultGpa">–</div><div class="label">CGPA</div></div>
+      <div><div class="num" id="resultCredits">–</div><div class="label">Total credits</div></div>
+    </div>
+  </section>
+
+  <footer>
+    IITM Foundation Hub — built as a personal study companion. Content is a template; fill in your own week notes as the term goes on.
+  </footer>
+
+</div>
+
+<script>
+/* ---------- Data ---------- */
+const GRADE_POINTS = {S:10, A:9, B:8, C:7, D:6, E:4, U:0};
+
+function weekTemplate(n, focus){
+  return {title: `Week ${n}: ${focus}`, blurb: "Add your notes, deadlines and resources for this week here."};
+}
+
+const subjects = [
+  {
+    code: "ENG-I", name: "English I",
+    tagline: "Reading comprehension, grammar and academic writing basics.",
+    weeksDone: 3,
+    weeks: [
+      "Reading strategies","Sentence structure","Paragraph writing","Grammar essentials",
+      "Vocabulary building","Formal vs informal tone","Summarising a passage","Note-making",
+      "Descriptive writing","Comparing texts","Revision workshop","Mock assessment"
+    ]
+  },
+  {
+    code: "MDS-I", name: "Mathematics for Data Science I",
+    tagline: "Algebra, functions and sequences that everything else builds on.",
+    weeksDone: 5,
+    weeks: [
+      "Sets and functions","Sequences and series","System of linear equations","Matrices, intro",
+      "Matrix operations","Determinants","Vectors, intro","Straight lines",
+      "Quadratic equations","Permutations & combinations","Coordinate geometry","Revision & practice"
+    ]
+  },
+  {
+    code: "SDS-I", name: "Statistics for Data Science I",
+    tagline: "Descriptive statistics and the basics of probability.",
+    weeksDone: 4,
+    weeks: [
+      "Types of data","Summarising data","Measures of central tendency","Measures of spread",
+      "Correlation","Basic probability","Conditional probability","Bayes' theorem",
+      "Random variables","Discrete distributions","Continuous distributions","Revision & practice"
+    ]
+  },
+  {
+    code: "CT", name: "Computational Thinking",
+    tagline: "Breaking problems down the way a program would solve them.",
+    weeksDone: 6,
+    weeks: [
+      "What is computational thinking","Flowcharts","Pseudocode basics","Variables & data types",
+      "Conditionals","Loops","Functions","Recursion, intro",
+      "Arrays and lists","Searching","Sorting","Revision & practice"
+    ]
+  },
+  {
+    code: "ENG-II", name: "English II",
+    tagline: "Building on English I with structured argument and presentation.",
+    weeksDone: 2,
+    weeks: [
+      "Argumentative writing","Building a thesis","Using evidence","Structuring an essay",
+      "Presentation skills","Email & report writing","Editing your own work","Peer review",
+      "Persuasive techniques","Public speaking basics","Revision workshop","Mock assessment"
+    ]
+  },
+  {
+    code: "MDS-II", name: "Mathematics for Data Science II",
+    tagline: "Calculus and multivariable methods used across data science.",
+    weeksDone: 1,
+    weeks: [
+      "Limits and continuity","Differentiation basics","Applications of derivatives","Maxima & minima",
+      "Integration basics","Definite integrals","Multivariable functions","Partial derivatives",
+      "Optimisation","Differential equations, intro","Applications in data science","Revision & practice"
+    ]
+  },
+  {
+    code: "SDS-II", name: "Statistics for Data Science II",
+    tagline: "Estimation, hypothesis testing and regression.",
+    weeksDone: 0,
+    weeks: [
+      "Sampling distributions","Point estimation","Confidence intervals","Hypothesis testing, intro",
+      "One-sample tests","Two-sample tests","Chi-square tests","Simple linear regression",
+      "Multiple regression","Model evaluation","ANOVA, intro","Revision & practice"
+    ]
+  },
+  {
+    code: "PY", name: "Programming in Python",
+    tagline: "Writing, testing and structuring real Python programs.",
+    weeksDone: 4,
+    weeks: [
+      "Python basics & syntax","Control flow","Functions in Python","Strings & lists",
+      "Dictionaries & sets","File handling","Errors & exceptions","Writing clean functions",
+      "Modules & libraries","Working with data (pandas intro)","Simple plotting","Mini project"
+    ]
+  }
+];
+
+/* ---------- Render subject grid ---------- */
+const grid = document.getElementById('subjectGrid');
+function renderGrid(list){
+  grid.innerHTML = "";
+  list.forEach(s => {
+    const card = document.createElement('div');
+    card.className = "subject-card";
+    card.tabIndex = 0;
+    card.dataset.code = s.code;
+    const ticks = s.weeks.map((_, i) => `<span class="${i < s.weeksDone ? 'done' : ''}"></span>`).join('');
+    card.innerHTML = `
+      <div class="code">${s.code}</div>
+      <h3>${s.name}</h3>
+      <p class="tagline">${s.tagline}</p>
+      <div class="week-ticks">${ticks}</div>
+      <div class="progress-label">Week ${s.weeksDone} of 12</div>
+    `;
+    card.addEventListener('click', () => openDetail(s.code));
+    card.addEventListener('keypress', e => { if(e.key === 'Enter') openDetail(s.code); });
+    grid.appendChild(card);
+  });
+  document.getElementById('noResults').classList.toggle('show', list.length === 0);
+}
+renderGrid(subjects);
+
+/* ---------- Search ---------- */
+document.getElementById('searchInput').addEventListener('input', e => {
+  const q = e.target.value.trim().toLowerCase();
+  const filtered = subjects.filter(s =>
+    s.name.toLowerCase().includes(q) || s.code.toLowerCase().includes(q) || s.tagline.toLowerCase().includes(q)
+  );
+  renderGrid(filtered);
+});
+
+/* ---------- Detail panel ---------- */
+const detailPanel = document.getElementById('detailPanel');
+let currentSubjectCode = null;
+
+function openDetail(code){
+  const s = subjects.find(x => x.code === code);
+  if(!s) return;
+  currentSubjectCode = code;
+  document.getElementById('detailCode').textContent = s.code;
+  document.getElementById('detailName').textContent = s.name;
+  document.getElementById('detailTagline').textContent = s.tagline;
+  const weekList = document.getElementById('weekList');
+  weekList.innerHTML = s.weeks.map((w, i) => `
+    <div class="week-row">
+      <div class="wk">${String(i+1).padStart(2,'0')}</div>
+      <div class="wk-body">
+        <h4>${w}</h4>
+        <p>${i < s.weeksDone ? 'Marked complete.' : 'Not started yet — add your notes as you go.'}</p>
+      </div>
+    </div>
+  `).join('');
+  detailPanel.classList.add('open');
+  detailPanel.scrollIntoView({behavior:'smooth', block:'start'});
+}
+document.getElementById('closeDetail').addEventListener('click', () => {
+  detailPanel.classList.remove('open');
+});
+document.getElementById('askTutorBtn').addEventListener('click', () => {
+  const sel = document.getElementById('tutorSubject');
+  sel.value = currentSubjectCode;
+  document.getElementById('tutor').scrollIntoView({behavior:'smooth'});
+});
+
+/* ---------- AI Tutor (simulated) ---------- */
+const tutorSelect = document.getElementById('tutorSubject');
+subjects.forEach(s => {
+  const opt = document.createElement('option');
+  opt.value = s.code; opt.textContent = `${s.code} — ${s.name}`;
+  tutorSelect.appendChild(opt);
+});
+
+const tutorMessages = document.getElementById('tutorMessages');
+function addMessage(text, who){
+  const div = document.createElement('div');
+  div.className = `msg ${who}`;
+  div.textContent = text;
+  tutorMessages.appendChild(div);
+  tutorMessages.scrollTop = tutorMessages.scrollHeight;
+}
+addMessage("Pick a subject on the left, then ask me anything about it. I'll answer with sample guidance for now.", "bot");
+
+function tutorReply(question, subjectCode){
+  const s = subjects.find(x => x.code === subjectCode);
+  const q = question.toLowerCase();
+  if(!s) return "Pick a subject first, then ask your question.";
+  if(q.includes("this week") || q.includes("current week")){
+    const idx = Math.min(s.weeksDone, s.weeks.length - 1);
+    return `You're on Week ${idx+1}: ${s.weeks[idx]}. Focus on the core definitions first, then work through a couple of practice problems.`;
+  }
+  if(q.includes("practice") || q.includes("question")){
+    return `Here's a starting point for ${s.name}: try explaining the last topic you covered out loud in your own words, then attempt one problem without notes.`;
+  }
+  if(q.includes("syllabus") || q.includes("topics") || q.includes("weeks")){
+    return `${s.name} covers: ${s.weeks.slice(0,4).join(", ")}, and more across 12 weeks. Open the subject card above to see the full outline.`;
+  }
+  return `Good question about ${s.name}. This demo tutor gives sample guidance — connect it to a live model to get real, subject-specific answers.`;
+}
+
+function sendTutorMessage(){
+  const input = document.getElementById('tutorInput');
+  const text = input.value.trim();
+  if(!text) return;
+  addMessage(text, "user");
+  input.value = "";
+  setTimeout(() => addMessage(tutorReply(text, tutorSelect.value), "bot"), 300);
+}
+document.getElementById('tutorSend').addEventListener('click', sendTutorMessage);
+document.getElementById('tutorInput').addEventListener('keypress', e => { if(e.key === 'Enter') sendTutorMessage(); });
+
+/* ---------- CGPA calculator ---------- */
+const cgpaBody = document.getElementById('cgpaBody');
+function addCgpaRow(name = "", credits = 4, grade = "A"){
+  const tr = document.createElement('tr');
+  tr.innerHTML = `
+    <td><input type="text" class="course-name" placeholder="e.g. Statistics for Data Science I" value="${name}"></td>
+    <td><input type="number" class="course-credits" min="1" max="12" value="${credits}"></td>
+    <td>
+      <select class="course-grade">
+        ${Object.keys(GRADE_POINTS).map(g => `<option value="${g}" ${g===grade?'selected':''}>${g}</option>`).join('')}
+      </select>
+    </td>
+    <td><button class="row-remove" title="Remove course">&times;</button></td>
+  `;
+  tr.querySelector('.row-remove').addEventListener('click', () => tr.remove());
+  cgpaBody.appendChild(tr);
+}
+subjects.slice(0,4).forEach(s => addCgpaRow(s.name, 4, "A"));
+
+document.getElementById('addRow').addEventListener('click', () => addCgpaRow());
+document.getElementById('calcCgpa').addEventListener('click', () => {
+  let totalCredits = 0, totalPoints = 0;
+  cgpaBody.querySelectorAll('tr').forEach(tr => {
+    const credits = parseFloat(tr.querySelector('.course-credits').value) || 0;
+    const grade = tr.querySelector('.course-grade').value;
+    totalCredits += credits;
+    totalPoints += credits * (GRADE_POINTS[grade] ?? 0);
+  });
+  document.getElementById('resultCredits').textContent = totalCredits || "–";
+  document.getElementById('resultGpa').textContent = totalCredits ? (totalPoints / totalCredits).toFixed(2) : "–";
+});
+</script>
+
+</body>
+</html>
