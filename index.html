@@ -3,16 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>IITM Foundation Hub — Subjects, AI Tutor & CGPA Calculator</title>
-<meta name="description" content="A free study hub for IIT Madras BS Foundation level: all 8 subjects with week-by-week outlines, an AI tutor to ask questions, and a CGPA calculator.">
-<meta name="keywords" content="IITM Foundation, IIT Madras BS, Foundation level subjects, CGPA calculator, AI tutor, Mathematics for Data Science, Statistics for Data Science, Python programming">
+<title>IITM Study Hub — Foundation, Diploma, BSc & BS</title>
+<meta name="description" content="A study hub for every IIT Madras BS level: Foundation, Diploma in Programming, Diploma in Data Science, BSc and BS degree — with week-by-week outlines, an AI tutor, and a CGPA calculator.">
+<meta name="keywords" content="IITM Foundation, IIT Madras BS, Diploma in Programming, Diploma in Data Science, BSc Degree, BS Degree, CGPA calculator, AI tutor">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://hydraallen050306-ux.github.io/iitm-foundation-hub/">
 
 <!-- Open Graph (how it looks when shared on WhatsApp, social, etc.) -->
 <meta property="og:type" content="website">
-<meta property="og:title" content="IITM Foundation Hub">
-<meta property="og:description" content="All 8 IITM Foundation subjects, an AI tutor, and a CGPA calculator — in one page.">
+<meta property="og:title" content="IITM Study Hub">
+<meta property="og:description" content="Foundation, Diploma, BSc and BS — every level, one hub, with an AI tutor and CGPA calculator.">
 <meta property="og:url" content="https://hydraallen050306-ux.github.io/iitm-foundation-hub/">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -120,6 +120,15 @@
   .no-results{padding:32px 4px;color:var(--ink-soft);font-size:14px;display:none;}
   .no-results.show{display:block;}
 
+  /* Level tabs */
+  .level-tabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:24px;}
+  .level-tab{
+    border:1px solid var(--line-strong);background:var(--white);color:var(--ink-soft);
+    padding:8px 16px;font-size:13.5px;cursor:pointer;font-family:inherit;
+  }
+  .level-tab:hover{color:var(--maroon);border-color:var(--maroon);}
+  .level-tab.active{background:var(--maroon);color:var(--white);border-color:var(--maroon);}
+
   /* Subject detail panel */
   .detail-panel{
     display:none;border:1px solid var(--line);background:var(--white);
@@ -226,7 +235,7 @@
 <header>
   <div class="header-inner">
     <div class="wordmark">
-      <span class="mark">IITM Foundation Hub</span>
+      <span class="mark">IITM Study Hub</span>
     </div>
     <nav class="top-nav">
       <a href="#subjects">Subjects</a>
@@ -243,10 +252,10 @@
 <div class="wrap">
 
   <section class="hero">
-    <h1>Everything for your <span class="accent">Foundation</span> level, in one place.</h1>
-    <p class="lede">Eight subjects, twelve weeks each, one hub. Track your week, ask the tutor when you're stuck, and keep an eye on your CGPA as you go.</p>
+    <h1>Every level of your <span class="accent">IITM</span> journey, in one place.</h1>
+    <p class="lede">Foundation, Diploma in Programming, Diploma in Data Science, BSc and BS — pick your level, track your week, ask the tutor when you're stuck, and keep an eye on your CGPA.</p>
     <div class="hero-stats">
-      <div class="stat"><div class="num">8</div><div class="label">Foundation subjects</div></div>
+      <div class="stat"><div class="num">5</div><div class="label">Program levels</div></div>
       <div class="stat"><div class="num">12</div><div class="label">Weeks per term</div></div>
       <div class="stat"><div class="num">1</div><div class="label">Hub for all of it</div></div>
     </div>
@@ -254,8 +263,9 @@
 
   <section class="section" id="subjects">
     <div class="section-head">
-      <div><h2>Your subjects</h2><p>Open a subject to see its week-by-week outline.</p></div>
+      <div><h2>Your subjects</h2><p>Pick a level, then open a subject to see its week-by-week outline.</p></div>
     </div>
+    <div class="level-tabs" id="levelTabs"></div>
     <div class="subject-grid" id="subjectGrid"></div>
     <div class="no-results" id="noResults">No subject matches that search.</div>
 
@@ -314,7 +324,7 @@
   </section>
 
   <footer>
-    IITM Foundation Hub — built as a personal study companion. Content is a template; fill in your own week notes as the term goes on.
+    IITM Study Hub — built as a personal study companion across Foundation, Diploma, BSc and BS levels. Content is a template; fill in your own week notes as the term goes on.
   </footer>
 
 </div>
@@ -340,10 +350,13 @@ const GRADE_POINTS = {S:10, A:9, B:8, C:7, D:6, E:4, U:0};
 function week(title, video = null, pdf = null){
   return { title, video, pdf };
 }
+function placeholderWeeks(count){
+  return Array.from({length: count}, (_, i) => week(`Week ${i+1} — add your topic here`));
+}
 
 const subjects = [
   {
-    code: "ENG-I", name: "English I",
+    level: "foundation", code: "ENG-I", name: "English I",
     tagline: "Reading comprehension, grammar and academic writing basics.",
     weeksDone: 3,
     weeks: [
@@ -353,7 +366,7 @@ const subjects = [
     ]
   },
   {
-    code: "MDS-I", name: "Mathematics for Data Science I",
+    level: "foundation", code: "MDS-I", name: "Mathematics for Data Science I",
     tagline: "Algebra, functions and sequences that everything else builds on.",
     weeksDone: 5,
     weeks: [
@@ -363,7 +376,7 @@ const subjects = [
     ]
   },
   {
-    code: "SDS-I", name: "Statistics for Data Science I",
+    level: "foundation", code: "SDS-I", name: "Statistics for Data Science I",
     tagline: "Descriptive statistics and the basics of probability.",
     weeksDone: 4,
     weeks: [
@@ -373,7 +386,7 @@ const subjects = [
     ]
   },
   {
-    code: "CT", name: "Computational Thinking",
+    level: "foundation", code: "CT", name: "Computational Thinking",
     tagline: "Breaking problems down the way a program would solve them.",
     weeksDone: 6,
     weeks: [
@@ -383,7 +396,7 @@ const subjects = [
     ]
   },
   {
-    code: "ENG-II", name: "English II",
+    level: "foundation", code: "ENG-II", name: "English II",
     tagline: "Building on English I with structured argument and presentation.",
     weeksDone: 2,
     weeks: [
@@ -393,7 +406,7 @@ const subjects = [
     ]
   },
   {
-    code: "MDS-II", name: "Mathematics for Data Science II",
+    level: "foundation", code: "MDS-II", name: "Mathematics for Data Science II",
     tagline: "Calculus and multivariable methods used across data science.",
     weeksDone: 1,
     weeks: [
@@ -403,7 +416,7 @@ const subjects = [
     ]
   },
   {
-    code: "SDS-II", name: "Statistics for Data Science II",
+    level: "foundation", code: "SDS-II", name: "Statistics for Data Science II",
     tagline: "Estimation, hypothesis testing and regression.",
     weeksDone: 0,
     weeks: [
@@ -413,7 +426,7 @@ const subjects = [
     ]
   },
   {
-    code: "PY", name: "Programming in Python",
+    level: "foundation", code: "PY", name: "Programming in Python",
     tagline: "Writing, testing and structuring real Python programs.",
     weeksDone: 4,
     weeks: [
@@ -421,8 +434,234 @@ const subjects = [
       week("Dictionaries & sets"), week("File handling"), week("Errors & exceptions"), week("Writing clean functions"),
       week("Modules & libraries"), week("Working with data (pandas intro)"), week("Simple plotting"), week("Mini project")
     ]
+  },
+
+  // ---- Diploma in Programming ----
+  {
+    level: "dip-prog", code: "PDSA", name: "Programming, Data Structures & Algorithms",
+    tagline: "Core data structures and algorithmic thinking in Python.",
+    weeksDone: 0,
+    weeks: placeholderWeeks(12)
+  },
+  {
+    level: "dip-prog", code: "DBMS", name: "Database Management Systems",
+    tagline: "Relational databases, SQL and schema design.",
+    weeksDone: 0,
+    weeks: placeholderWeeks(12)
+  },
+  {
+    level: "dip-prog", code: "MAD-I", name: "Modern Application Development I",
+    tagline: "Building web applications: frontend basics and Flask.",
+    weeksDone: 0,
+    weeks: placeholderWeeks(12)
+  },
+  {
+    level: "dip-prog", code: "MAD-II", name: "Modern Application Development II",
+    tagline: "JavaScript, REST APIs and full-stack app development.",
+    weeksDone: 0,
+    weeks: placeholderWeeks(12)
+  },
+  {
+    level: "dip-prog", code: "JAVA", name: "Programming Concepts using Java",
+    tagline: "Object-oriented programming fundamentals in Java.",
+    weeksDone: 0,
+    weeks: placeholderWeeks(12)
+  },
+  {
+    level: "dip-prog", code: "SYS-CMD", name: "System Commands",
+    tagline: "Linux shell, command-line tools and scripting.",
+    weeksDone: 0,
+    weeks: placeholderWeeks(12)
+  },
+  {
+    level: "dip-prog", code: "C-PROG", name: "Programming in C",
+    tagline: "Low-level programming, memory and pointers.",
+    weeksDone: 0,
+    weeks: placeholderWeeks(12)
+  },
+  {
+    level: "dip-prog", code: "APP-DEV", name: "App Development Project",
+    tagline: "A capstone project applying the diploma's programming skills.",
+    weeksDone: 0,
+    weeks: placeholderWeeks(12)
+  },
+
+  // ---- Diploma in Data Science ----
+  {
+    level: "dip-ds", code: "MLF", name: "Machine Learning Foundations",
+    tagline: "Core ML concepts: features, models and evaluation.",
+    weeksDone: 0,
+    weeks: placeholderWeeks(12)
+  },
+  {
+    level: "dip-ds", code: "MFML", name: "Mathematical Foundations of Machine Learning",
+    tagline: "Linear algebra and optimisation for ML.",
+    weeksDone: 0,
+    weeks: placeholderWeeks(12)
+  },
+  {
+    level: "dip-ds", code: "BDM", name: "Business Data Management",
+    tagline: "Working with real-world business data and databases.",
+    weeksDone: 0,
+    weeks: placeholderWeeks(12)
+  },
+  {
+    level: "dip-ds", code: "BA", name: "Business Analytics",
+    tagline: "Applying data analysis to business decisions.",
+    weeksDone: 0,
+    weeks: placeholderWeeks(12)
+  },
+  {
+    level: "dip-ds", code: "MLT", name: "Machine Learning Techniques",
+    tagline: "Supervised and unsupervised learning algorithms.",
+    weeksDone: 0,
+    weeks: placeholderWeeks(12)
+  },
+  {
+    level: "dip-ds", code: "MLP", name: "Machine Learning Practice",
+    tagline: "Hands-on ML pipelines using real datasets.",
+    weeksDone: 0,
+    weeks: placeholderWeeks(12)
+  },
+  {
+    level: "dip-ds", code: "AOA", name: "Age of AI",
+    tagline: "A broad look at AI's tools, applications and impact.",
+    weeksDone: 0,
+    weeks: placeholderWeeks(12)
+  },
+  {
+    level: "dip-ds", code: "TDS", name: "Tools in Data Science",
+    tagline: "The practical toolkit: notebooks, APIs, scraping and more.",
+    weeksDone: 0,
+    weeks: placeholderWeeks(12)
+  },
+
+  // ---- BSc Degree ----
+  {
+    level: "bsc", code: "SE", name: "Software Engineering",
+    tagline: "Software development lifecycle, design and teamwork.",
+    weeksDone: 0,
+    weeks: placeholderWeeks(12)
+  },
+  {
+    level: "bsc", code: "ST", name: "Software Testing",
+    tagline: "Testing strategies, automation and quality assurance.",
+    weeksDone: 0,
+    weeks: placeholderWeeks(12)
+  },
+  {
+    level: "bsc", code: "AI-SEARCH", name: "AI: Search Methods for Problem Solving",
+    tagline: "Search algorithms and problem-solving in AI.",
+    weeksDone: 0,
+    weeks: placeholderWeeks(12)
+  },
+  {
+    level: "bsc", code: "DL", name: "Deep Learning",
+    tagline: "Neural networks: from basics to modern architectures.",
+    weeksDone: 0,
+    weeks: placeholderWeeks(12)
+  },
+  {
+    level: "bsc", code: "SPG", name: "Strategies for Professional Growth",
+    tagline: "Communication, career skills and workplace readiness.",
+    weeksDone: 0,
+    weeks: placeholderWeeks(12)
+  },
+  {
+    level: "bsc", code: "IND4", name: "Industry 4.0",
+    tagline: "Automation, IoT and data-driven manufacturing.",
+    weeksDone: 0,
+    weeks: placeholderWeeks(12)
+  },
+  {
+    level: "bsc", code: "BDC", name: "Big Data and Cloud Computing",
+    tagline: "Distributed data processing and cloud platforms.",
+    weeksDone: 0,
+    weeks: placeholderWeeks(12)
+  },
+  {
+    level: "bsc", code: "MGEC", name: "Managerial Economics",
+    tagline: "Economic principles applied to business decisions.",
+    weeksDone: 0,
+    weeks: placeholderWeeks(12)
+  },
+
+  // ---- BS Degree ----
+  {
+    level: "bs", code: "DLP", name: "Deep Learning Practice",
+    tagline: "Hands-on deep learning projects and frameworks.",
+    weeksDone: 0,
+    weeks: placeholderWeeks(12)
+  },
+  {
+    level: "bs", code: "AI-KR", name: "AI: Knowledge Representation & Reasoning",
+    tagline: "Logic, ontologies and reasoning systems in AI.",
+    weeksDone: 0,
+    weeks: placeholderWeeks(12)
+  },
+  {
+    level: "bs", code: "RL", name: "Reinforcement Learning",
+    tagline: "Agents that learn from reward and interaction.",
+    weeksDone: 0,
+    weeks: placeholderWeeks(12)
+  },
+  {
+    level: "bs", code: "ABIO", name: "Algorithmic Thinking in Bioinformatics",
+    tagline: "Applying algorithms to biological and genomic data.",
+    weeksDone: 0,
+    weeks: placeholderWeeks(12)
+  },
+  {
+    level: "bs", code: "DVIZ", name: "Data Visualisation Design",
+    tagline: "Designing clear, honest visual stories from data.",
+    weeksDone: 0,
+    weeks: placeholderWeeks(12)
+  },
+  {
+    level: "bs", code: "DDSB", name: "Data and Decision Sciences for Business",
+    tagline: "Using data science to drive business strategy.",
+    weeksDone: 0,
+    weeks: placeholderWeeks(12)
+  },
+  {
+    level: "bs", code: "SDS-III", name: "Statistics for Data Science III",
+    tagline: "Advanced statistical modelling and inference.",
+    weeksDone: 0,
+    weeks: placeholderWeeks(12)
+  },
+  {
+    level: "bs", code: "ADV-ALG", name: "Advanced Algorithms",
+    tagline: "Algorithm design, complexity and optimisation techniques.",
+    weeksDone: 0,
+    weeks: placeholderWeeks(12)
   }
 ];
+
+const levels = [
+  { id: "foundation", label: "Foundation" },
+  { id: "dip-prog", label: "Diploma — Programming" },
+  { id: "dip-ds", label: "Diploma — Data Science" },
+  { id: "bsc", label: "BSc Degree" },
+  { id: "bs", label: "BS Degree" }
+];
+let currentLevel = "foundation";
+
+/* ---------- Render level tabs ---------- */
+const levelTabsEl = document.getElementById('levelTabs');
+function renderLevelTabs(){
+  levelTabsEl.innerHTML = levels.map(l => `
+    <button class="level-tab ${l.id === currentLevel ? 'active' : ''}" data-level="${l.id}">${l.label}</button>
+  `).join('');
+  levelTabsEl.querySelectorAll('.level-tab').forEach(btn => {
+    btn.addEventListener('click', () => {
+      currentLevel = btn.dataset.level;
+      document.getElementById('searchInput').value = "";
+      renderLevelTabs();
+      applyFilters();
+    });
+  });
+}
+renderLevelTabs();
 
 /* ---------- Render subject grid ---------- */
 const grid = document.getElementById('subjectGrid');
@@ -447,16 +686,18 @@ function renderGrid(list){
   });
   document.getElementById('noResults').classList.toggle('show', list.length === 0);
 }
-renderGrid(subjects);
-
-/* ---------- Search ---------- */
-document.getElementById('searchInput').addEventListener('input', e => {
-  const q = e.target.value.trim().toLowerCase();
+function applyFilters(){
+  const q = document.getElementById('searchInput').value.trim().toLowerCase();
   const filtered = subjects.filter(s =>
-    s.name.toLowerCase().includes(q) || s.code.toLowerCase().includes(q) || s.tagline.toLowerCase().includes(q)
+    s.level === currentLevel &&
+    (s.name.toLowerCase().includes(q) || s.code.toLowerCase().includes(q) || s.tagline.toLowerCase().includes(q))
   );
   renderGrid(filtered);
-});
+}
+applyFilters();
+
+/* ---------- Search ---------- */
+document.getElementById('searchInput').addEventListener('input', applyFilters);
 
 /* ---------- Detail panel ---------- */
 const detailPanel = document.getElementById('detailPanel');
@@ -499,10 +740,15 @@ document.getElementById('askTutorBtn').addEventListener('click', () => {
 
 /* ---------- AI Tutor (simulated) ---------- */
 const tutorSelect = document.getElementById('tutorSubject');
-subjects.forEach(s => {
-  const opt = document.createElement('option');
-  opt.value = s.code; opt.textContent = `${s.code} — ${s.name}`;
-  tutorSelect.appendChild(opt);
+levels.forEach(l => {
+  const group = document.createElement('optgroup');
+  group.label = l.label;
+  subjects.filter(s => s.level === l.id).forEach(s => {
+    const opt = document.createElement('option');
+    opt.value = s.code; opt.textContent = `${s.code} — ${s.name}`;
+    group.appendChild(opt);
+  });
+  tutorSelect.appendChild(group);
 });
 
 const tutorMessages = document.getElementById('tutorMessages');
